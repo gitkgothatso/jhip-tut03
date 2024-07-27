@@ -1,0 +1,25 @@
+{
+  "jhipTut03App": {
+    "todo": {
+      "home": {
+        "title": "Todos",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Todo",
+        "createOrEditLabel": "Crear o editar Todo",
+        "notFound": "Ningún Todos encontrado"
+      },
+      "created": "Un nuevo Todo ha sido creado con el identificador {{ param }}",
+      "updated": "Un Todo ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Todo ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Todo {{ id }}?"
+      },
+      "detail": {
+        "title": "Todo"
+      },
+      "id": "ID",
+      "title": "Title",
+      "description": "Description"
+    }
+  }
+}
