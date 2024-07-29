@@ -4,21 +4,30 @@ import static com.jhiptut.third.domain.TodoAsserts.*;
 import static com.jhiptut.third.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jhiptut.third.IntegrationTest;
 import com.jhiptut.third.domain.Todo;
+import com.jhiptut.third.domain.User;
 import com.jhiptut.third.repository.TodoRepository;
+import com.jhiptut.third.repository.UserRepository;
 import jakarta.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link TodoResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class TodoResourceIT {
@@ -51,6 +61,12 @@ class TodoResourceIT {
     private TodoRepository todoRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Mock
+    private TodoRepository todoRepositoryMock;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -68,6 +84,11 @@ class TodoResourceIT {
      */
     public static Todo createEntity(EntityManager em) {
         Todo todo = new Todo().title(DEFAULT_TITLE).description(DEFAULT_DESCRIPTION);
+        // Add required entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        todo.setOwnedBy(user);
         return todo;
     }
 
@@ -79,6 +100,11 @@ class TodoResourceIT {
      */
     public static Todo createUpdatedEntity(EntityManager em) {
         Todo todo = new Todo().title(UPDATED_TITLE).description(UPDATED_DESCRIPTION);
+        // Add required entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        todo.setOwnedBy(user);
         return todo;
     }
 
@@ -164,6 +190,23 @@ class TodoResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(todo.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllTodosWithEagerRelationshipsIsEnabled() throws Exception {
+        when(todoRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restTodoMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(todoRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllTodosWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(todoRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restTodoMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(todoRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

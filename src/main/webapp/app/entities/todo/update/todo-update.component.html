@@ -38,6 +38,32 @@
             formControlName="description"
           />
         </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_ownedBy" jhiTranslate="jhipTut03App.todo.ownedBy">Owned By</label>
+          <select
+            class="form-control"
+            id="field_ownedBy"
+            data-cy="ownedBy"
+            name="ownedBy"
+            formControlName="ownedBy"
+            [compareWith]="compareUser"
+          >
+            @if (!editForm.get('ownedBy')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (userOption of usersSharedCollection; track $index) {
+              <option [ngValue]="userOption">{{ userOption.login }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['ownedBy'])!.invalid && (editForm.get(['ownedBy'])!.dirty || editForm.get(['ownedBy'])!.touched)) {
+          <div>
+            @if (editForm.get(['ownedBy'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
       </div>
 
       <div>

@@ -20,6 +20,7 @@ type TodoFormGroupContent = {
   id: FormControl<ITodo['id'] | NewTodo['id']>;
   title: FormControl<ITodo['title']>;
   description: FormControl<ITodo['description']>;
+  ownedBy: FormControl<ITodo['ownedBy']>;
 };
 
 export type TodoFormGroup = FormGroup<TodoFormGroupContent>;
@@ -43,6 +44,9 @@ export class TodoFormService {
         validators: [Validators.required],
       }),
       description: new FormControl(todoRawValue.description),
+      ownedBy: new FormControl(todoRawValue.ownedBy, {
+        validators: [Validators.required],
+      }),
     });
   }
 

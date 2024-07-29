@@ -1,11 +1,11 @@
-id;title;description
-1;decisive tinted;solvency winged
-2;fight per;vandalise
-3;swelter;throughout
-4;school where namecheck;supposing acclimate brr
-5;however funny intensely;babyish spill oh
-6;only;sentimental
-7;miniaturize contaminate after;bah
-8;bumpy reorganize;blab thud
-9;upliftingly teethe;sweetly
-10;early;as
+id;title;description;owned_by_id
+1;decisive tinted;solvency winged;1
+2;fight per;vandalise;2
+3;swelter;throughout;1
+4;school where namecheck;supposing acclimate brr;1
+5;however funny intensely;babyish spill oh;1
+6;only;sentimental;2
+7;miniaturize contaminate after;bah;1
+8;bumpy reorganize;blab thud;1
+9;upliftingly teethe;sweetly;1
+10;early;as;2

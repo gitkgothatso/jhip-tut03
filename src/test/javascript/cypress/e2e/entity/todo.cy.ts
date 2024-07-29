@@ -15,19 +15,44 @@ describe('Todo e2e test', () => {
   const todoPageUrlPattern = new RegExp('/todo(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const todoSample = { title: 'luminous' };
+  // const todoSample = {"title":"gah"};
 
   let todo;
+  // let user;
 
   beforeEach(() => {
     cy.login(username, password);
   });
+
+  /* Disabled due to incompatibility
+  beforeEach(() => {
+    // create an instance at the required relationship entity:
+    cy.authenticatedRequest({
+      method: 'POST',
+      url: '/api/users',
+      body: {"login":"l_1|X5@NCio\\%IfV\\XMZo2w-\\43lO\\DDw\\~EACb0B","firstName":"Thurman","lastName":"Murazik","email":"Ladarius60@hotmail.com","imageUrl":"until super","langKey":"mysterious"},
+    }).then(({ body }) => {
+      user = body;
+    });
+  });
+   */
 
   beforeEach(() => {
     cy.intercept('GET', '/api/todos+(?*|)').as('entitiesRequest');
     cy.intercept('POST', '/api/todos').as('postEntityRequest');
     cy.intercept('DELETE', '/api/todos/*').as('deleteEntityRequest');
   });
+
+  /* Disabled due to incompatibility
+  beforeEach(() => {
+    // Simulate relationships api for better performance and reproducibility.
+    cy.intercept('GET', '/api/users', {
+      statusCode: 200,
+      body: [user],
+    });
+
+  });
+   */
 
   afterEach(() => {
     if (todo) {
@@ -39,6 +64,19 @@ describe('Todo e2e test', () => {
       });
     }
   });
+
+  /* Disabled due to incompatibility
+  afterEach(() => {
+    if (user) {
+      cy.authenticatedRequest({
+        method: 'DELETE',
+        url: `/api/users/${user.id}`,
+      }).then(() => {
+        user = undefined;
+      });
+    }
+  });
+   */
 
   it('Todos menu should load Todos page', () => {
     cy.visit('/');
@@ -75,11 +113,15 @@ describe('Todo e2e test', () => {
     });
 
     describe('with existing value', () => {
+      /* Disabled due to incompatibility
       beforeEach(() => {
         cy.authenticatedRequest({
           method: 'POST',
           url: '/api/todos',
-          body: todoSample,
+          body: {
+            ...todoSample,
+            ownedBy: user,
+          },
         }).then(({ body }) => {
           todo = body;
 
@@ -92,13 +134,24 @@ describe('Todo e2e test', () => {
             {
               statusCode: 200,
               body: [todo],
-            },
+            }
           ).as('entitiesRequestInternal');
         });
 
         cy.visit(todoPageUrl);
 
         cy.wait('@entitiesRequestInternal');
+      });
+       */
+
+      beforeEach(function () {
+        cy.visit(todoPageUrl);
+
+        cy.wait('@entitiesRequest').then(({ response }) => {
+          if (response?.body.length === 0) {
+            this.skip();
+          }
+        });
       });
 
       it('detail button click should load details Todo page', () => {
@@ -132,7 +185,7 @@ describe('Todo e2e test', () => {
         cy.url().should('match', todoPageUrlPattern);
       });
 
-      it('last delete button click should delete instance of Todo', () => {
+      it.skip('last delete button click should delete instance of Todo', () => {
         cy.get(entityDeleteButtonSelector).last().click();
         cy.getEntityDeleteDialogHeading('todo').should('exist');
         cy.get(entityConfirmDeleteButtonSelector).click();
@@ -156,12 +209,14 @@ describe('Todo e2e test', () => {
       cy.getEntityCreateUpdateHeading('Todo');
     });
 
-    it('should create an instance of Todo', () => {
-      cy.get(`[data-cy="title"]`).type('past gosh lanky');
-      cy.get(`[data-cy="title"]`).should('have.value', 'past gosh lanky');
+    it.skip('should create an instance of Todo', () => {
+      cy.get(`[data-cy="title"]`).type('luminous');
+      cy.get(`[data-cy="title"]`).should('have.value', 'luminous');
 
-      cy.get(`[data-cy="description"]`).type('ambitious');
-      cy.get(`[data-cy="description"]`).should('have.value', 'ambitious');
+      cy.get(`[data-cy="description"]`).type('per qua misconceive');
+      cy.get(`[data-cy="description"]`).should('have.value', 'per qua misconceive');
+
+      cy.get(`[data-cy="ownedBy"]`).select(1);
 
       cy.get(entityCreateSaveButtonSelector).click();
 

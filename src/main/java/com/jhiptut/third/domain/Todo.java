@@ -30,6 +30,10 @@ public class Todo implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @ManyToOne(optional = false)
+    @NotNull
+    private User ownedBy;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -69,6 +73,19 @@ public class Todo implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public User getOwnedBy() {
+        return this.ownedBy;
+    }
+
+    public void setOwnedBy(User user) {
+        this.ownedBy = user;
+    }
+
+    public Todo ownedBy(User user) {
+        this.setOwnedBy(user);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

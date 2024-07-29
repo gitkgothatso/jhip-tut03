@@ -19,7 +19,8 @@
       },
       "id": "ID",
       "title": "Title",
-      "description": "Description"
+      "description": "Description",
+      "ownedBy": "Owned By"
     }
   }
 }

@@ -1,23 +1,24 @@
 import { ITodo, NewTodo } from './todo.model';
 
 export const sampleWithRequiredData: ITodo = {
-  id: 9430,
-  title: 'ew',
+  id: 8862,
+  title: 'detailed impression',
 };
 
 export const sampleWithPartialData: ITodo = {
-  id: 6719,
-  title: 'demilitarize quince',
+  id: 23404,
+  title: 'against kid following',
+  description: 'query greedily phooey',
 };
 
 export const sampleWithFullData: ITodo = {
-  id: 29417,
-  title: 'brr fooey stigmatise',
-  description: 'acquire',
+  id: 565,
+  title: 'gee',
+  description: 'past gosh lanky',
 };
 
 export const sampleWithNewData: NewTodo = {
-  title: 'likewise anenst gee',
+  title: 'ambitious',
   id: null,
 };
 

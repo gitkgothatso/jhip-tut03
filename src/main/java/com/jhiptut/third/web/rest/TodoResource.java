@@ -141,12 +141,17 @@ public class TodoResource {
     /**
      * {@code GET  /todos} : get all the todos.
      *
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of todos in body.
      */
     @GetMapping("")
-    public List<Todo> getAllTodos() {
+    public List<Todo> getAllTodos(@RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload) {
         log.debug("REST request to get all Todos");
-        return todoRepository.findAll();
+        if (eagerload) {
+            return todoRepository.findAllWithEagerRelationships();
+        } else {
+            return todoRepository.findAll();
+        }
     }
 
     /**
@@ -158,7 +163,7 @@ public class TodoResource {
     @GetMapping("/{id}")
     public ResponseEntity<Todo> getTodo(@PathVariable("id") Long id) {
         log.debug("REST request to get Todo : {}", id);
-        Optional<Todo> todo = todoRepository.findById(id);
+        Optional<Todo> todo = todoRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(todo);
     }
 

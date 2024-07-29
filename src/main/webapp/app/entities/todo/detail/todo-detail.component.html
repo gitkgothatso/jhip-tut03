@@ -23,6 +23,10 @@
           <dd>
             <span>{{ todo()!.description }}</span>
           </dd>
+          <dt><span jhiTranslate="jhipTut03App.todo.ownedBy">Owned By</span></dt>
+          <dd>
+            <span>{{ todo()!.ownedBy?.login }}</span>
+          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

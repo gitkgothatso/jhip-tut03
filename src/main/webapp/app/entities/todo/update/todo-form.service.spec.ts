@@ -22,6 +22,7 @@ describe('Todo Form Service', () => {
             id: expect.any(Object),
             title: expect.any(Object),
             description: expect.any(Object),
+            ownedBy: expect.any(Object),
           }),
         );
       });
@@ -34,6 +35,7 @@ describe('Todo Form Service', () => {
             id: expect.any(Object),
             title: expect.any(Object),
             description: expect.any(Object),
+            ownedBy: expect.any(Object),
           }),
         );
       });
